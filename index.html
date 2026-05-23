@@ -798,13 +798,31 @@ footer{background:#141210;padding:2rem 3rem;display:flex;justify-content:space-b
 // Ã¢Â•ÂÃ¢Â•ÂÃ¢Â•Â PAGE NAVIGATION Ã¢Â•ÂÃ¢Â•ÂÃ¢Â•Â
 const PAGES = ['home','students','educators','immersive','research','certificate','schools','about','contact'];
 
-function showPage(id) {
+function showPage(id, push) {
   PAGES.forEach(function(p) {
     var el = document.getElementById('page-' + p);
     if (el) el.classList.toggle('active', p === id);
   });
   window.scrollTo({top: 0, behavior: 'smooth'});
+  if (push !== false) {
+    var url = id === 'home' ? '/' : '/' + id;
+    history.pushState({page: id}, '', url);
+  }
 }
+
+window.addEventListener('popstate', function(e) {
+  var id = (e.state && e.state.page) || pageFromPath();
+  showPage(id, false);
+});
+
+function pageFromPath() {
+  var p = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
+  return PAGES.indexOf(p) !== -1 ? p : 'home';
+}
+
+(function() {
+  showPage(pageFromPath(), false);
+})();
 
 // Ã¢Â•ÂÃ¢Â•ÂÃ¢Â•Â INJECT CL + FOOTER INTO EVERY PAGE Ã¢Â•ÂÃ¢Â•ÂÃ¢Â•Â
 var CL_HTML = '<div class="cl-section"><div class="cl-inner">'
