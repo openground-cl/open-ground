@@ -241,7 +241,20 @@ select.fi{cursor:pointer}
 .cl-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.9rem;color:rgba(245,242,236,0.38);margin-bottom:1.5rem}
 .cl-text{font-size:0.84rem;color:rgba(245,242,236,0.38);font-weight:300;line-height:1.8;font-style:italic}
 
-/* Ã¢Â”Â€Ã¢Â”Â€ FOOTER Ã¢Â”Â€Ã¢Â”Â€ */
+/* ── HAMBURGER & MOBILE DRAWER ── */
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:4px;border-radius:6px}
+.nav-hamburger span{display:block;height:1.5px;background:var(--ink);border-radius:2px;transition:transform 0.25s,opacity 0.25s}
+.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-hamburger.open span:nth-child(2){opacity:0}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mobile-drawer{position:fixed;inset:0;z-index:199;display:flex;flex-direction:column;background:var(--bg0);padding:5.5rem 2rem 2.5rem;transform:translateX(100%);transition:transform 0.3s ease;overflow-y:auto}
+.mobile-drawer.open{transform:translateX(0)}
+.mob-nav-link{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--ink);text-decoration:none;padding:0.7rem 0;border-bottom:1px solid var(--rule);cursor:pointer;display:block}
+.mob-nav-link:last-child{border-bottom:none}
+.mob-nav-sub{font-family:'DM Sans',sans-serif;font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-soft);margin:1.25rem 0 0.5rem;padding:0}
+.mob-nav-cta{display:inline-block;margin-top:1.5rem;background:var(--sage);color:var(--white);padding:0.85rem 2rem;border-radius:2rem;font-size:0.88rem;cursor:pointer;text-decoration:none;border:none;font-family:'DM Sans',sans-serif}
+
+/* ── FOOTER ── */
 footer{background:#141210;padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
 .footer-brand{display:flex;align-items:center;gap:0.75rem}
 .footer-brand img{height:44px;width:auto;object-fit:contain}
@@ -252,8 +265,8 @@ footer{background:#141210;padding:2rem 3rem;display:flex;justify-content:space-b
 /* Ã¢Â”Â€Ã¢Â”Â€ RESPONSIVE Ã¢Â”Â€Ã¢Â”Â€ */
 @media(max-width:900px){
   nav{padding:0.9rem 1.5rem}
-  .nav-links a:not(.nav-cta){display:none}
-  .ndrop-btn{display:none}
+  .nav-links{display:none}
+  .nav-hamburger{display:flex}
   .home-hero,.prog-hero-inner,.two-col,.cert-grid{grid-template-columns:1fr}
   .home-hero{padding:6rem 1.5rem 4rem}
   .hero-img{display:none}
@@ -312,7 +325,23 @@ footer{background:#141210;padding:2rem 3rem;display:flex;justify-content:space-b
     <a onclick="showPage('about')">About</a>
     <a onclick="showPage('contact')" class="nav-cta">Express Interest</a>
   </div>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu" onclick="toggleDrawer()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<div class="mobile-drawer" id="mobileDrawer">
+  <a class="mob-nav-link" onclick="navTo('home')">Home</a>
+  <p class="mob-nav-sub">Programs</p>
+  <a class="mob-nav-link" onclick="navTo('students')" style="font-size:1.25rem;padding-left:0.75rem">Students</a>
+  <a class="mob-nav-link" onclick="navTo('educators')" style="font-size:1.25rem;padding-left:0.75rem">Educators</a>
+  <a class="mob-nav-link" onclick="navTo('immersive')" style="font-size:1.25rem;padding-left:0.75rem">Immersive</a>
+  <a class="mob-nav-link" onclick="navTo('research')">Research</a>
+  <a class="mob-nav-link" onclick="navTo('certificate')">Certificate</a>
+  <a class="mob-nav-link" onclick="navTo('schools')">For Schools</a>
+  <a class="mob-nav-link" onclick="navTo('about')">About</a>
+  <a class="mob-nav-cta" onclick="navTo('contact')">Express Interest</a>
+</div>
 
 <!-- Ã¢Â•ÂÃ¢Â•ÂÃ¢Â•Â HOME Ã¢Â•ÂÃ¢Â•ÂÃ¢Â•Â -->
 <div class="page active" id="page-home">
@@ -808,6 +837,23 @@ function showPage(id, push) {
     var url = id === 'home' ? '/' : '/' + id;
     history.pushState({page: id}, '', url);
   }
+}
+
+function toggleDrawer() {
+  var d = document.getElementById('mobileDrawer');
+  var h = document.getElementById('hamburger');
+  var open = d.classList.toggle('open');
+  h.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+
+function navTo(id) {
+  var d = document.getElementById('mobileDrawer');
+  var h = document.getElementById('hamburger');
+  d.classList.remove('open');
+  h.classList.remove('open');
+  document.body.style.overflow = '';
+  showPage(id);
 }
 
 window.addEventListener('popstate', function(e) {
